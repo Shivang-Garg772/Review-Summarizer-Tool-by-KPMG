@@ -20,8 +20,8 @@ if page == "Home":
     product_data['Category'] = product_data['Category'].str.lower()
 
     # Initialize NLPCloud Clients (API key should ideally be in secrets.toml)
-    summarization_client = nlpcloud.Client("finetuned-llama-3-70b", "8ec9bd4fcdf12ce506cd492e465c8bbed756e240", gpu=True)
-    sentiment_client = nlpcloud.Client("distilbert-base-uncased-emotion", "8ec9bd4fcdf12ce506cd492e465c8bbed756e240", gpu=False)
+    summarization_client = nlpcloud.Client("finetuned-llama-3-70b", "6b3545eb467ee02db256b8972dffd230323fa08c", gpu=True)
+    sentiment_client = nlpcloud.Client("distilbert-base-uncased-finetuned-sst-2-english", "6b3545eb467ee02db256b8972dffd230323fa08c", gpu=False)
 
     # Search functionality
     search_term = st.text_input("Search for a Brand or Category", "").lower()
@@ -34,12 +34,21 @@ if page == "Home":
             st.write(f"Showing results for: {search_term}")
             filtered_display = filtered_data[['Brand', 'Category', 'Reviews', 'Price']]
             st.write(filtered_display)
+            
 
             selected_product = st.selectbox("Select a product to analyze", filtered_display['Brand'].unique())
             if selected_product:
                 product_reviews = filtered_data[filtered_data['Brand'] == selected_product]['Reviews'].dropna().tolist()
                 reviews_text = " ".join(product_reviews)
+                filtered_select_product = filtered_data[filtered_data['Brand'] == selected_product]
 
+                if not filtered_select_product.empty:
+                    overall_rating = filtered_select_product.iloc[0]['Rating']
+                    st.write(f"Overall rating for the product {selected_product} is: {overall_rating}")
+                else:
+                    st.write(f"No product found for the selected brand: {selected_product}")
+
+                
                 if reviews_text:
                     summary = summarization_client.summarization(reviews_text, size="small")['summary_text']
                     st.write(f"Summary of Reviews for {selected_product}:")
