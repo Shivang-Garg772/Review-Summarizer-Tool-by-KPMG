@@ -27,7 +27,7 @@ if page == "Home":
     category_options = product_data['Category'].unique()
     selected_category = st.selectbox("Select a Category", ["All"] + list(category_options))
 
-        if selected_category != "All":
+        
         if selected_category != "All":
             filtered_data = product_data[product_data['Category'] == selected_category]
         else:
