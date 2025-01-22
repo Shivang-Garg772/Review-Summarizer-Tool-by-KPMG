@@ -55,20 +55,21 @@ if page == "Home":
                     st.write(f"Overall rating for the product {selected_product} is: {overall_rating}")
                 else:
                     st.write(f"No product found for the selected brand: {selected_product}")
+                try:
 
                 if reviews_text:
                     summary = summarization_client.summarization(reviews_text, size="small")['summary_text']
                     st.write(f"Summary of Reviews for {selected_product}:")
                     st.write(summary)
 
-                    # Try-Except block for Sentiment Analysis
-                    try:
+                    
+                
                         sentiment_response = sentiment_client.sentiment(summary)['scored_labels']
                         sentiment_analysis = [(item['label'], round(item['score']*100, 4)) for item in sentiment_response]
                         st.write(f"Sentiment Analysis for {selected_product}:")
                         for sentiment in sentiment_analysis:
                             st.write(f"{sentiment[0]}: {sentiment[1]}%")
-                    except Exception as e:
+                except Exception as e:
                         st.error(f"Error occurred while analyzing sentiment: {e}")
                         st.warning("Please try again later.")
                 else:
