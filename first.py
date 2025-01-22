@@ -32,14 +32,12 @@ if page == "Home":
     else:
         filtered_data = product_data
 
-    # Search term functionality (assuming you also have a search term input)
-    search_term = st.text_input("Search term", "")
-
-    filtered_data = filtered_data[(filtered_data['Brand'].str.contains(search_term)) |
-                                  (filtered_data['Category'].str.contains(search_term))]
+    # Removed the search term input
+    # filtered_data = filtered_data[(filtered_data['Brand'].str.contains(search_term)) |
+    #                               (filtered_data['Category'].str.contains(search_term))]
 
     if not filtered_data.empty:
-        st.write(f"Showing results for: {search_term} in category: {selected_category}")
+        st.write(f"Showing results in category: {selected_category}")
         filtered_display = filtered_data[['Brand', 'Category', 'Reviews', 'Price']]
         st.write(filtered_display)
 
@@ -74,7 +72,7 @@ if page == "Home":
             else:
                 st.write(f"No reviews found for the selected product: {selected_product}")
     else:
-        st.write("No results found for your search.")
+        st.write("No results found for your selection.")
 elif page == "Dashboard":
     # Now load the content from dashboard.py (You can import functions from dashboard.py if necessary)
     st.title("Dashboard Page")
@@ -113,11 +111,4 @@ elif page == "Dashboard":
     ax.set_ylabel("Frequency")
     st.pyplot(fig)
     
-    # Create a price vs. rating scatter plot
-    st.subheader("Price vs. Rating")
-    fig, ax = plt.subplots()
-    sns.scatterplot(x='Price', y='Rating', data=product_data, hue='Category', ax=ax)
-    ax.set_title("Price vs. Rating")
-    ax.set_xlabel("Price")
-    ax.set_ylabel("Rating")
-    st.pyplot(fig)
+    # Create a price vs. rating scatter 
