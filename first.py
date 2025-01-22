@@ -55,28 +55,27 @@ if page == "Home":
                     st.write(f"Overall rating for the product {selected_product} is: {overall_rating}")
                 else:
                     st.write(f"No product found for the selected brand: {selected_product}")
-                try:
 
+                # Try to get the summary and sentiment analysis
                 if reviews_text:
-                    summary = summarization_client.summarization(reviews_text, size="small")['summary_text']
-                    st.write(f"Summary of Reviews for {selected_product}:")
-                    st.write(summary)
+                    try:
+                        summary = summarization_client.summarization(reviews_text, size="small")['summary_text']
+                        st.write(f"Summary of Reviews for {selected_product}:")
+                        st.write(summary)
 
-                    
-                
                         sentiment_response = sentiment_client.sentiment(summary)['scored_labels']
                         sentiment_analysis = [(item['label'], round(item['score']*100, 4)) for item in sentiment_response]
                         st.write(f"Sentiment Analysis for {selected_product}:")
                         for sentiment in sentiment_analysis:
                             st.write(f"{sentiment[0]}: {sentiment[1]}%")
-                except Exception as e:
-                        st.error(f"Error occurred while analyzing sentiment: {e}")
-                        st.warning("Please try again later.")
+                    except Exception:
+                        # If there is an error, print a custom message
+                        st.error("Error occurred. Please try again later.")
+                        st.warning("Try later")
                 else:
                     st.write(f"No reviews found for the selected product: {selected_product}")
         else:
             st.write("No results found for your search.")
-
 elif page == "Dashboard":
     # Now load the content from dashboard.py (You can import functions from dashboard.py if necessary)
     st.title("Dashboard Page")
@@ -123,4 +122,3 @@ elif page == "Dashboard":
     ax.set_xlabel("Price")
     ax.set_ylabel("Rating")
     st.pyplot(fig)
-    
