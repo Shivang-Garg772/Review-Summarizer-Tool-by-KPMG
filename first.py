@@ -27,10 +27,7 @@ if page == "Home":
     category_options = product_data['Category'].unique()
     selected_category = st.selectbox("Select a Category", ["All"] + list(category_options))
 
-    # Search functionality
-    search_term = st.text_input("Search for a Brand", "").lower()
-
-    if search_term or selected_category != "All":
+        if search_term or selected_category != "All":
         if selected_category != "All":
             filtered_data = product_data[product_data['Category'] == selected_category]
         else:
