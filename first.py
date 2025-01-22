@@ -27,52 +27,54 @@ if page == "Home":
     category_options = product_data['Category'].unique()
     selected_category = st.selectbox("Select a Category", ["All"] + list(category_options))
 
-        
-        if selected_category != "All":
-            filtered_data = product_data[product_data['Category'] == selected_category]
-        else:
-            filtered_data = product_data
+    if selected_category != "All":
+        filtered_data = product_data[product_data['Category'] == selected_category]
+    else:
+        filtered_data = product_data
 
-        filtered_data = filtered_data[(filtered_data['Brand'].str.contains(search_term)) |
-                                      (filtered_data['Category'].str.contains(search_term))]
+    # Search term functionality (assuming you also have a search term input)
+    search_term = st.text_input("Search term", "")
 
-        if not filtered_data.empty:
-            st.write(f"Showing results for: {search_term} in category: {selected_category}")
-            filtered_display = filtered_data[['Brand', 'Category', 'Reviews', 'Price']]
-            st.write(filtered_display)
-            
-            selected_product = st.selectbox("Select a product to analyze", filtered_display['Brand'].unique())
-            if selected_product:
-                product_reviews = filtered_data[filtered_data['Brand'] == selected_product]['Reviews'].dropna().tolist()
-                reviews_text = " ".join(product_reviews)
-                filtered_select_product = filtered_data[filtered_data['Brand'] == selected_product]
+    filtered_data = filtered_data[(filtered_data['Brand'].str.contains(search_term)) |
+                                  (filtered_data['Category'].str.contains(search_term))]
 
-                if not filtered_select_product.empty:
-                    overall_rating = filtered_select_product.iloc[0]['Rating']
-                    st.write(f"Overall rating for the product {selected_product} is: {overall_rating}")
-                else:
-                    st.write(f"No product found for the selected brand: {selected_product}")
+    if not filtered_data.empty:
+        st.write(f"Showing results for: {search_term} in category: {selected_category}")
+        filtered_display = filtered_data[['Brand', 'Category', 'Reviews', 'Price']]
+        st.write(filtered_display)
 
-                # Try to get the summary and sentiment analysis
-                if reviews_text:
-                    try:
-                        summary = summarization_client.summarization(reviews_text, size="small")['summary_text']
-                        st.write(f"Summary of Reviews for {selected_product}:")
-                        st.write(summary)
+        selected_product = st.selectbox("Select a product to analyze", filtered_display['Brand'].unique())
+        if selected_product:
+            product_reviews = filtered_data[filtered_data['Brand'] == selected_product]['Reviews'].dropna().tolist()
+            reviews_text = " ".join(product_reviews)
+            filtered_select_product = filtered_data[filtered_data['Brand'] == selected_product]
 
-                        sentiment_response = sentiment_client.sentiment(summary)['scored_labels']
-                        sentiment_analysis = [(item['label'], round(item['score']*100, 4)) for item in sentiment_response]
-                        st.write(f"Sentiment Analysis for {selected_product}:")
-                        for sentiment in sentiment_analysis:
-                            st.write(f"{sentiment[0]}: {sentiment[1]}%")
-                    except Exception:
-                        # If there is an error, print a custom message
-                        st.error("Error occurred. Please try again later.")
-                        st.warning("Try later")
-                else:
-                    st.write(f"No reviews found for the selected product: {selected_product}")
-        else:
-            st.write("No results found for your search.")
+            if not filtered_select_product.empty:
+                overall_rating = filtered_select_product.iloc[0]['Rating']
+                st.write(f"Overall rating for the product {selected_product} is: {overall_rating}")
+            else:
+                st.write(f"No product found for the selected brand: {selected_product}")
+
+            # Try to get the summary and sentiment analysis
+            if reviews_text:
+                try:
+                    summary = summarization_client.summarization(reviews_text, size="small")['summary_text']
+                    st.write(f"Summary of Reviews for {selected_product}:")
+                    st.write(summary)
+
+                    sentiment_response = sentiment_client.sentiment(summary)['scored_labels']
+                    sentiment_analysis = [(item['label'], round(item['score']*100, 4)) for item in sentiment_response]
+                    st.write(f"Sentiment Analysis for {selected_product}:")
+                    for sentiment in sentiment_analysis:
+                        st.write(f"{sentiment[0]}: {sentiment[1]}%")
+                except Exception:
+                    # If there is an error, print a custom message
+                    st.error("Error occurred. Please try again later.")
+                    st.warning("Try later")
+            else:
+                st.write(f"No reviews found for the selected product: {selected_product}")
+    else:
+        st.write("No results found for your search.")
 elif page == "Dashboard":
     # Now load the content from dashboard.py (You can import functions from dashboard.py if necessary)
     st.title("Dashboard Page")
