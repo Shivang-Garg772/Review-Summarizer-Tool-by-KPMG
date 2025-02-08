@@ -20,8 +20,8 @@ if page == "Home":
     product_data['Category'] = product_data['Category'].str.lower()
 
     # Initialize NLPCloud Clients (API key should ideally be in secrets.toml)
-    summarization_client = nlpcloud.Client("finetuned-llama-3-70b", "dc2edb9f6552d1342580b49ccea568c2944d82ee", gpu=True)
-    sentiment_client = nlpcloud.Client("distilbert-base-uncased-finetuned-sst-2-english", "dc2edb9f6552d1342580b49ccea568c2944d82ee", gpu=False)
+    summarization_client = nlpcloud.Client("finetuned-llama-3-70b", "bd5da31cce8236c083baaa00141c866b24ee7bc8", gpu=True)
+    sentiment_client = nlpcloud.Client("distilbert-base-uncased-finetuned-sst-2-english", "bd5da31cce8236c083baaa00141c866b24ee7bc8", gpu=False)
 
     # Category selection dropdown
     category_options = product_data['Category'].unique()
