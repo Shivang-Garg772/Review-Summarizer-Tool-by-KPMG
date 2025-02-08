@@ -68,7 +68,6 @@ if page == "Home":
                 except Exception:
                     # If there is an error, print a custom message
                     st.error("Error occurred. Please try again later.")
-                    st.warning("Try later")
             else:
                 st.write(f"No reviews found for the selected product: {selected_product}")
     else:
